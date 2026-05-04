@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Перевірка сертифікату | Coursera Global</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Outfit:wght@400;700;900&display=swap" rel="stylesheet">
+    <script>
+        // Handle path for local testing vs GitHub Pages
+        const repoName = '/coursera.global';
+        const basePath = window.location.pathname.includes(repoName) ? repoName : '';
+        document.write('<link rel="stylesheet" href="' + basePath + '/styles.css">');
+    </script>
+    <style>
+        .validate-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 20px;
+        }
+        .cert-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+        .status-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+        .valid { color: #10b981; }
+        .invalid { color: #ef4444; }
+        .cert-id {
+            font-family: monospace;
+            background: rgba(255,255,255,0.05);
+            padding: 5px 10px;
+            border-radius: 4px;
+            color: var(--primary-color);
+        }
+        .home-btn {
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <header class="navbar scrolled">
+        <div class="container">
+            <script>
+                document.write('<a href="' + basePath + '/" class="logo">Coursera.<span>Global</span></a>');
+            </script>
+        </div>
+    </header>
+
+    <section class="validate-section">
+        <div class="container">
+            <div class="cert-card" id="certResult">
+                <div class="status-icon">⏳</div>
+                <h2 class="modal-title">Перевірка сертифікату...</h2>
+                <p class="text-muted" style="color: var(--text-muted)">Зачекайте, ми шукаємо сертифікат у базі даних.</p>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const validIds = [
+                "CR-5AD234F1",
+                "CR-A0C40F34",
+                "CR-24652B9E",
+                "CR-9E9F1885",
+                "CR-B88C387B",
+                "CR-A2FEB21D",
+                "CR-678B761A"
+            ];
+
+            const pathParts = window.location.pathname.split('/').filter(p => p);
+            
+            // Handle /validate/<CERT_ID>
+            const validateIndex = pathParts.indexOf('validate');
+            const isValidateRoute = validateIndex !== -1;
+            const certId = isValidateRoute && validateIndex + 1 < pathParts.length ? pathParts[validateIndex + 1] : null;
+
+            const resultContainer = document.getElementById('certResult');
+            const basePathStr = window.location.pathname.includes('/coursera.global') ? '/coursera.global' : '';
+
+            if (isValidateRoute && certId) {
+                setTimeout(() => {
+                    if (validIds.includes(certId)) {
+                        resultContainer.innerHTML = `
+                            <div class="status-icon valid">✓</div>
+                            <h2 class="modal-title">Сертифікат Дійсний</h2>
+                            <p>Цей сертифікат (<span class="cert-id">${certId}</span>) є офіційним документом, виданим <strong>Coursera Global</strong>.</p>
+                            <p style="margin-top: 15px; color: var(--text-muted);">Він підтверджує успішне проходження курсу та здобуття відповідних навичок.</p>
+                            <a href="${basePathStr}/" class="btn btn-outline home-btn">На головну</a>
+                        `;
+                    } else {
+                        resultContainer.innerHTML = `
+                            <div class="status-icon invalid">✗</div>
+                            <h2 class="modal-title">Сертифікат не знайдено</h2>
+                            <p>Сертифікат з ідентифікатором <span class="cert-id">${certId}</span> не існує в нашій базі даних.</p>
+                            <p style="margin-top: 15px; color: var(--text-muted);">Перевірте правильність посилання або зверніться до служби підтримки.</p>
+                            <a href="${basePathStr}/" class="btn btn-outline home-btn">На головну</a>
+                        `;
+                    }
+                }, 800); // Simulate network delay
+            } else {
+                // Generic 404
+                resultContainer.innerHTML = `
+                    <div class="status-icon invalid">404</div>
+                    <h2 class="modal-title">Сторінку не знайдено</h2>
+                    <p>Вибачте, сторінка за адресою <code>${window.location.pathname}</code> не існує.</p>
+                    <a href="${basePathStr}/" class="btn btn-outline home-btn">Повернутися на головну</a>
+                `;
+            }
+        });
+    </script>
+</body>
+</html>
